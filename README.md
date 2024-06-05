@@ -1,7 +1,3 @@
-# tarpaulin-api
-
-### README
-
 # Tarpaulin API
 
 Tarpaulin is a course management tool that involves developing a complete RESTful API for Tarpaulin, allowing users (instructors and students) to manage courses, assignments, and submissions.
