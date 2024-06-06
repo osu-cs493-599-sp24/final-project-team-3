@@ -98,7 +98,7 @@ The Tarpaulin API supports various operations for managing courses, assignments,
 
 ## API Endpoints
 
-The API endpoints are defined in the OpenAPI specification and can be viewed in the Swagger editor. Below are some key endpoints:
+The API endpoints are defined in the OpenAPI specification (openapi.yaml) and can be viewed in the Swagger editor( https://editor.swagger.io). Below are some key endpoints:
 
 - **User Authentication**
   - `POST /users`
