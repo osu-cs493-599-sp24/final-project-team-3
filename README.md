@@ -101,27 +101,32 @@ The Tarpaulin API supports various operations for managing courses, assignments,
 The API endpoints are defined in the OpenAPI specification and can be viewed in the Swagger editor. Below are some key endpoints:
 
 - **User Authentication**
-  - `POST /auth/register`
-  - `POST /auth/login`
+  - `POST /users`
+  - `POST /users/login`
+  - `GET /users/{id}`
+
 - **Courses**
   - `GET /courses`
   - `GET /courses/{id}`
   - `POST /courses`
-  - `PUT /courses/{id}`
+  - `PATCH /courses/{id}`
   - `DELETE /courses/{id}`
   - `GET /courses/{id}/roster`
+  - `GET /courses/{id}/students`
+  - `POST /courses/{id}/students`
+  - `GET /courses/{id}/assignments`
+    
 - **Assignments**
-  - `GET /assignments`
   - `GET /assignments/{id}`
   - `POST /assignments`
-  - `PUT /assignments/{id}`
+  - `PATCH /assignments/{id}`
   - `DELETE /assignments/{id}`
-- **Submissions**
-  - `GET /submissions`
-  - `GET /submissions/{id}`
+  - `GET /assignments/{id}/submissions`
   - `POST /assignments/{id}/submissions`
-  - `PUT /submissions/{id}`
-  - `DELETE /submissions/{id}`
+  - 
+- **Submissions**
+  - `PATCH /submissions/{id}`
+  - `GET /media/submissions/{filename}`
 
 ## Deployment
 
