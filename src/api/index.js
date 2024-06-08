@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.use(userRoutes);
 // router.use(courseRoutes);
+
 // router.use(assignmentRoutes);
 // router.use(submissionRoutes);
 

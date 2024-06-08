@@ -20,4 +20,5 @@ const syncDatabase = async () => {
   }
 };
 
+
 syncDatabase();

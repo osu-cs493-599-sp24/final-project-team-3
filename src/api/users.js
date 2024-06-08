@@ -77,6 +77,7 @@ router.get('/users/:id', authenticateToken, async (req, res, next) => {
 //     return res.status(400).json({ error: 'Initial user must have admin role.' });
 //   }
 
+
 //   try {
 //     const existingAdmin = await User.findOne({ where: { role: 'admin' } });
 //     if (existingAdmin) {
