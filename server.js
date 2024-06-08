@@ -1,25 +1,23 @@
 const express = require('express');
-const { sequelize } = require('./models');
-require('dotenv').config();
+const apiRoutes = require('./src/api');
+const sequelize = require('./src/config/database');
 
 const app = express();
 app.use(express.json());
-
-// Connect to the database
-sequelize.sync({ force: false }).then(() => {
-  console.log('Database synced');
-});
-
-// Routes
-const userRoutes = require('./routes/users');
-const courseRoutes = require('./routes/courses');
-const assignmentRoutes = require('./routes/assignments');
-const submissionRoutes = require('./routes/submissions');
-
-app.use('/api/users', userRoutes);
-app.use('/api/courses', courseRoutes);
-app.use('/api/assignments', assignmentRoutes);
-app.use('/api/submissions', submissionRoutes);
+app.use('/api', apiRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection established successfully.');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+
+startServer();

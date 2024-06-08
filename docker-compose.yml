@@ -1,36 +1,32 @@
-version: "3.9"
+version: '3.8'
 services:
-  mysql:
-    image: mysql:5.7
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: finalP
+      MYSQL_DATABASE: finalP
+      MYSQL_USER: finalP
+      MYSQL_PASSWORD: finalP
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
 
-  business-api:
+  app:
     build: .
+    container_name: node-app
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_PORT: ${MYSQL_PORT}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: finalP
+      DB_USER: finalP
+      DB_PASSWORD: finalP
+      ACCESS_TOKEN_SECRET: 4qcc3S1dYE9nEOS8mbk6h3GYs75xqPNPOy4g1PDPeAc=
     ports:
-      - "8000:8000"
+      - "3000:3000"
     depends_on:
-      - mysql
-      - redis
-
-  redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
+      - db
 
 volumes:
-  mysql-data:
+  mysql_data:
