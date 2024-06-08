@@ -1,19 +1,11 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
-
+const { Sequelize } = require('sequelize')
 const sequelize = new Sequelize({
   dialect: 'mysql',
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3306,
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  pool: {
-    max: 10,       // Maximum number of connections in the pool
-    min: 0,        // Minimum number of connections in the pool
-    acquire: 30000, // Maximum time (ms) to try to get a connection before throwing an error
-    idle: 10000    // Maximum time (ms) a connection can be idle before being released
-  }
-});
+  host: process.env.MYSQL_HOST || 'localhost',
+  port: process.env.MYSQL_PORT || 3306,
+  database: process.env.MYSQL_DATABASE,
+  username: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD
+})
 
-module.exports = sequelize;
+module.exports = sequelize
