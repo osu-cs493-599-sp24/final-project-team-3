@@ -76,7 +76,18 @@ The Tarpaulin API supports various operations for managing courses, assignments,
    AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
    AWS_S3_BUCKET_NAME=your_s3_bucket_name
    ```
+### To generate a secure JWT secret key, you can use various methods. Here are a few recommended ways to generate a strong secret key:
 
+   Using OpenSSL
+   If you have OpenSSL installed on your machine, you can generate a strong random key using the following command:
+
+   ```sh
+   openssl rand -base64 32
+   ```
+   This will generate a 32-byte random key encoded in base64. For example:
+   
+   `wA7pZGtJwMEHP9ZlQf3+Gd0T/jY6h1lJfGi1U7DtYY0=`
+   
 ## Running the Application
 
 ### Using Docker
