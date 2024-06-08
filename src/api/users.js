@@ -67,4 +67,28 @@ router.get('/users/:id', authenticateToken, async (req, res, next) => {
   }
 });
 
+/*
+ * POST /users/initial - Route to create the initial admin user.
+ * This route should only be used once to create the initial admin user.
+ */
+// router.post('/users/initial', async (req, res, next) => {
+//   const { username, email, password, role } = req.body;
+//   if (role !== 'admin') {
+//     return res.status(400).json({ error: 'Initial user must have admin role.' });
+//   }
+
+//   try {
+//     const existingAdmin = await User.findOne({ where: { role: 'admin' } });
+//     if (existingAdmin) {
+//       return res.status(403).json({ error: 'Initial admin user already exists.' });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     const user = await User.create({ username, email, password: hashedPassword, role });
+//     res.status(201).json({ id: user.id });
+//   } catch (err) {
+//     res.status(400).json({ error: 'Invalid User object.' });
+//   }
+// });
+
 module.exports = router;
