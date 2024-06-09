@@ -19,6 +19,10 @@ const Assignment = sequelize.define('Assignment', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   points: {
     type: DataTypes.INTEGER,
     allowNull: false

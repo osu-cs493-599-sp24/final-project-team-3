@@ -2,11 +2,27 @@ const { Router } = require('express');
 const { ValidationError } = require('sequelize');
 const Assignment = require('../models/assignments');
 const Course = require('../models/courses');
-//const Submission = require('../models/submissions');
+const Submission = require('../models/submissions');
 const authenticateToken = require('../middleware/authenticator');
 const authorizeRole = require('../middleware/authorization');
+const multer = require('multer');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 const router = Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../uploads'));
+  },
+  filename: (req, file, cb) => {
+    const filename = crypto.randomBytes(16).toString('hex') + path.extname(file.originalname);
+    cb(null, filename);
+  }
+});
+
+const upload = multer({ storage });
 
 /*
  * Route to create a new assignment.
@@ -21,6 +37,7 @@ router.post('/assignments', authenticateToken, authorizeRole('admin'), async fun
     if (e instanceof ValidationError) {
       res.status(400).json({ error: 'The request body was either not present or did not contain a valid Assignment object.' });
     } else {
+      res.status(500).json({ error: 'An internal server error occurred.' });
       next(e);
     }
   }
@@ -118,7 +135,7 @@ router.get('/assignments/:id/submissions', authenticateToken, async function (re
 /*
  * Route to create a new submission for an assignment.
  */
-router.post('/assignments/:id/submissions', authenticateToken, authorizeRole('student'), async function (req, res, next) {
+router.post('/assignments/:id/submissions', authenticateToken, authorizeRole('student'), upload.single('file'), async function (req, res, next) {
   const assignmentId = req.params.id;
 
   // Only students enrolled in the course can submit
@@ -142,7 +159,9 @@ router.post('/assignments/:id/submissions', authenticateToken, authorizeRole('st
       assignmentId,
       studentId: req.user.id,
       timestamp: new Date().toISOString(),
-      file: req.body.file // Assuming the file is being uploaded as part of the request body
+      contentType: req.file.mimetype,
+      filename: req.file.filename,
+      path: req.file.path
     };
 
     const submission = await Submission.create(submissionData);
