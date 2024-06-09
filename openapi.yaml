@@ -19,9 +19,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '201':
+        "201":
           description: New User successfully added
           content:
             application/json:
@@ -35,20 +35,20 @@ paths:
                     description: >
                       Unique ID of the created User.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
                     example: "123"
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain a valid User object.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /users/login:
     post:
@@ -65,12 +65,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
             example:
               email: jdoe@oregonstate.edu
               password: hunter2
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
@@ -82,27 +82,27 @@ paths:
                     description: >
                       A JWT authentication token.
                     example: aaaaaaaa.bbbbbbbb.cccccccc
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain all of the required fields.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '401':
+                $ref: "#/components/schemas/Error"
+        "401":
           description: >
             The specified credentials were invalid.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
+                $ref: "#/components/schemas/Error"
+        "500":
           description: >
             An internal server error occurred.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /users/{id}:
     parameters:
@@ -125,25 +125,25 @@ paths:
       tags:
         - Users
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '403':
+                $ref: "#/components/schemas/User"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Course `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /courses:
     get:
@@ -184,7 +184,7 @@ paths:
             type: string
             example: "sp22"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
@@ -194,7 +194,7 @@ paths:
                   courses:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Course'
+                      $ref: "#/components/schemas/Course"
 
     post:
       summary: Create a new course.
@@ -209,9 +209,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Course'
+              $ref: "#/components/schemas/Course"
       responses:
-        '201':
+        "201":
           description: New Course successfully added
           content:
             application/json:
@@ -225,20 +225,20 @@ paths:
                     description: >
                       Unique ID of the created Course.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
                     example: "123"
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain a valid Course object.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /courses/{id}:
     parameters:
@@ -261,18 +261,18 @@ paths:
       tags:
         - Courses
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Course'
-        '404':
+                $ref: "#/components/schemas/Course"
+        "404":
           description: Specified Course `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     patch:
       summary: Update data for a specific Course.
@@ -288,30 +288,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Course'
+              $ref: "#/components/schemas/Course"
       responses:
-        '200':
+        "200":
           description: Success
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain any fields related to Course objects.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Course `id` not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     delete:
       summary: Remove a specific Course from the database.
@@ -321,21 +321,21 @@ paths:
       tags:
         - Courses
       responses:
-        '204':
+        "204":
           description: Success
-        '403':
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Course `id` not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /courses/{id}/students:
     parameters:
@@ -357,7 +357,7 @@ paths:
       tags:
         - Courses
       responses:
-        '200':
+        "200":
           description: >
             Array of User IDs for students enrolled in the Course.  Exact type/format of IDs will depend on your implementation but each will likely be either an integer or a string.
           content:
@@ -368,20 +368,20 @@ paths:
                   students:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
-        '403':
+                      $ref: "#/components/schemas/User"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Course `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     post:
       summary: Update enrollment for a Course.
@@ -406,7 +406,7 @@ paths:
                       - type: integer
                       - type: string
                   description: Students to be enrolled in the Course.
-                  example: [ "123", "456" ]
+                  example: ["123", "456"]
                 remove:
                   type: array
                   items:
@@ -414,30 +414,30 @@ paths:
                       - type: integer
                       - type: string
                   description: Students to be unenrolled from the Course.
-                  example: [ "123", "456" ]
+                  example: ["123", "456"]
       responses:
-        '200':
+        "200":
           description: Success
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain the fields described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Course `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /courses/{id}/roster:
     parameters:
@@ -459,7 +459,7 @@ paths:
       tags:
         - Courses
       responses:
-        '200':
+        "200":
           description: >
             A CSV file containing information about all of the students currently enrolled in the Course, including names, IDs, and email addresses.
           content:
@@ -469,19 +469,19 @@ paths:
                 example: |
                   123,"Jane Doe",doej@oregonstate.edu
                   ...
-        '403':
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Course `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /courses/{id}/assignments:
     parameters:
@@ -503,7 +503,7 @@ paths:
       tags:
         - Courses
       responses:
-        '200':
+        "200":
           description: >
             Array of Assignment IDs for all of the Course's Assignments.  Exact type/format of IDs will depend on your implementation but each will likely be either an integer or a string.
           content:
@@ -514,13 +514,13 @@ paths:
                   assignments:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Assignment'
-        '404':
+                      $ref: "#/components/schemas/Assignment"
+        "404":
           description: Specified Course `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /assignments:
     post:
@@ -536,9 +536,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Assignment'
+              $ref: "#/components/schemas/Assignment"
       responses:
-        '201':
+        "201":
           description: New Assignment successfully added
           content:
             application/json:
@@ -552,20 +552,20 @@ paths:
                     description: >
                       Unique ID of the created Assignment.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
                     example: "123"
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain a valid Assignment object.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /assignments/{id}:
     parameters:
@@ -588,18 +588,18 @@ paths:
       tags:
         - Assignments
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Assignment'
-        '404':
+                $ref: "#/components/schemas/Assignment"
+        "404":
           description: Specified Assignment `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     patch:
       summary: Update data for a specific Assignment.
@@ -615,30 +615,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Assignment'
+              $ref: "#/components/schemas/Assignment"
       responses:
-        '200':
+        "200":
           description: Success
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain any fields related to Assignment objects.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Assignment `id` not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     delete:
       summary: Remove a specific Assignment from the database.
@@ -648,21 +648,21 @@ paths:
       tags:
         - Assignments
       responses:
-        '204':
+        "204":
           description: Success
-        '403':
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Assignment `id` not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /assignments/{id}/submissions:
     parameters:
@@ -699,11 +699,11 @@ paths:
             Fetch assignments only for the specified student ID.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
           schema:
             oneOf:
-            - type: integer
-            - type: string
+              - type: integer
+              - type: string
           example: "123"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
@@ -713,20 +713,20 @@ paths:
                   submissions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Submission'
-        '403':
+                      $ref: "#/components/schemas/Submission"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Assignment `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     post:
       summary: Create a new Submission for an Assignment.
@@ -741,9 +741,9 @@ paths:
         content:
           multipart/formdata:
             schema:
-              $ref: '#/components/schemas/Submission'
+              $ref: "#/components/schemas/Submission"
       responses:
-        '201':
+        "201":
           description: New Submission successfully added
           content:
             application/json:
@@ -757,26 +757,26 @@ paths:
                     description: >
                       Unique ID of the created Submission.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
                     example: "123"
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain a valid Submission object.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Assignment `id` not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /submissions/{id}:
     parameters:
@@ -805,30 +805,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Submission'
+              $ref: "#/components/schemas/Submission"
       responses:
-        '200':
+        "200":
           description: Success
-        '400':
+        "400":
           description: >
             The request body was either not present or did not contain any fields related to Assignment objects.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Submission `id` not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /media/submissions/{filename}:
     parameters:
@@ -849,21 +849,21 @@ paths:
       tags:
         - Submissions
       responses:
-        '200':
+        "200":
           description: Success
-        '403':
+        "403":
           description: >
             The request was not made by an authenticated User satisfying the authorization criteria described above.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Specified Submission `filename` not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:

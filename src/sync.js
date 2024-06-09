@@ -7,7 +7,10 @@ node src/sync.js
 */
 const sequelize = require('./config/database');
 const User = require('./models/users');
+const { Assignment } = require('./models/assignments');
+const { Course } = require('./models/courses');
 const submission = require('./models/submissions')
+const CourseEnrollments = require('./models/enrollments');
 // Add other models here
 
 const syncDatabase = async () => {
@@ -20,5 +23,6 @@ const syncDatabase = async () => {
     process.exit(1);
   }
 };
+
 
 syncDatabase();
