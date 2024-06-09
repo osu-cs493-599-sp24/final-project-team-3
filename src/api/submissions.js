@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const { Submission } = require('../models/submissions'); // Assuming you have a model set up
-const { authorize, authenticate } = require('../middleware/auth'); // Placeholder for your auth middleware
 
 const router = Router();
 
