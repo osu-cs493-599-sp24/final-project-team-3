@@ -29,12 +29,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/users",
+							"raw": "http://localhost:3000/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"users"
 							]
@@ -62,12 +62,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/users/login",
+							"raw": "http://localhost:3000/users/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"users",
 								"login"
@@ -143,12 +143,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId",
+							"raw": "http://localhost:3000/courses/:courseId",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId"
@@ -186,12 +186,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId",
+							"raw": "http://localhost:3000/courses/:courseId",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId"
@@ -216,12 +216,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId",
+							"raw": "http://localhost:3000/courses/:courseId",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId"
@@ -246,12 +246,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId/students",
+							"raw": "http://localhost:3000/courses/:courseId/students",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId",
@@ -290,12 +290,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId/students",
+							"raw": "http://localhost:3000/courses/:courseId/students",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId",
@@ -321,12 +321,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId/roster",
+							"raw": "http://localhost:3000/courses/:courseId/roster",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId",
@@ -347,12 +347,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/courses/:courseId/assignments",
+							"raw": "http://localhost:3000/courses/:courseId/assignments",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"courses",
 								":courseId",
@@ -396,12 +396,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/assignments",
+							"raw": "http://localhost:3000/assignments",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"assignments"
 							]
@@ -420,12 +420,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/assignments/:id",
+							"raw": "http://localhost:3000/assignments/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"assignments",
 								":id"
@@ -463,12 +463,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/assignments/:id",
+							"raw": "http://localhost:3000/assignments/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"assignments",
 								":id"
@@ -493,12 +493,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/assignments/:id",
+							"raw": "http://localhost:3000/assignments/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"assignments",
 								":id"
@@ -523,12 +523,12 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/assignments/:id/submissions",
+							"raw": "http://localhost:3000/assignments/:id/submissions",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"assignments",
 								":id",
@@ -567,12 +567,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/assignments/:id/submissions",
+							"raw": "http://localhost:3000/assignments/:id/submissions",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "3000",
 							"path": [
 								"assignments",
 								":id",

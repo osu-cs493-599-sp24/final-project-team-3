@@ -14,7 +14,7 @@ const router = express.Router();
  */
 router.post('/users', authenticateToken, authorizeRole('admin'), async (req, res, next) => {
   const { username, email, password, role } = req.body;
-  
+
   if (req.user.role !== 'admin' && (role === 'admin' || role === 'instructor')) {
     return res.status(403).json({ error: 'Forbidden. Only admins can create users with admin or instructor roles.' });
   }
@@ -22,14 +22,7 @@ router.post('/users', authenticateToken, authorizeRole('admin'), async (req, res
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ username, email, password: hashedPassword, role });
-    
-    // Generate token after creating user
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-
-    // Log the token
-    console.log(`Generated token for user ${username}: ${token}`);
-
-    res.status(201).json({ id: user.id, token });
+    res.status(201).json({ id: user.id });
   } catch (err) {
     res.status(400).json({ error: 'Invalid User object.' });
   }
