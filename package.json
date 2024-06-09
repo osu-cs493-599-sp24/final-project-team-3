@@ -15,6 +15,8 @@
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.0",
+    "retry-as-promised": "^7.0.4",
+
     "sequelize": "^6.37.3",
     "json2csv": "^5.0.6"
   }
