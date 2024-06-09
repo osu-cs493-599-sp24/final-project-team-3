@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { ValidationError } = require('sequelize');
 const Assignment = require('../models/assignments');
 const Course = require('../models/courses');
-const Submission = require('../models/submissions');
+//const Submission = require('../models/submissions');
 const authenticateToken = require('../middleware/authenticator');
 const authorizeRole = require('../middleware/authorization');
 
@@ -13,9 +13,11 @@ const router = Router();
  */
 router.post('/assignments', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   try {
+    console.log('Request Body:', req.body); // Log the request body for debugging
     const assignment = await Assignment.create(req.body);
     res.status(201).send({ id: assignment.id });
   } catch (e) {
+    console.error('Error:', e); // Log the exact error
     if (e instanceof ValidationError) {
       res.status(400).json({ error: 'The request body was either not present or did not contain a valid Assignment object.' });
     } else {
@@ -40,7 +42,6 @@ router.get('/assignments/:assignmentId', authenticateToken, async function (req,
     next(e);
   }
 });
-
 
 /*
  * Route to update an assignment.
@@ -79,7 +80,6 @@ router.delete('/assignments/:assignmentId', authenticateToken, authorizeRole('ad
     next(e);
   }
 });
-
 
 /*
  * Route to fetch the list of all submissions for an assignment.
