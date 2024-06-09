@@ -9,7 +9,6 @@ const sequelize = require('./config/database');
 const User = require('./models/users');
 const { Assignment } = require('./models/assignments');
 const { Course } = require('./models/courses');
-
 const CourseEnrollments = require('./models/enrollments');
 // Add other models here
 

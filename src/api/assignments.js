@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const { validateAgainstSchema, extractValidFields } = require('../config/validation');
 const database = require("../config/database");
-const { authenticateToken, authorizeRole, matchesCourseInstructor } = require("../middleware/authenticator");
+const { authorizeRole } = require("../middleware/authorization");
+const { authenticateToken, matchesCourseInstructor } = require("../middleware/authenticator");
 const ObjectId = require("sequelize").ObjectId;
 
 exports.router = router;
@@ -21,7 +22,7 @@ const submissionSchema = {
 };
 
 // POST /assignments
-router.post('/', authenticateToken, async (req, res, next) => {
+router.post('/assignments', async (req, res, next) => {
   const { role, id: userId } = req.user;
 
   if (role !== 'admin' && !(role === 'instructor' && await matchesCourseInstructor(userId, req.body.courseId))) {
@@ -48,7 +49,7 @@ router.post('/', authenticateToken, async (req, res, next) => {
 });
 
 // GET /assignments/:id
-router.get('/:id', authenticateToken, async (req, res, next) => {
+router.get('/assignments/:id', authenticateToken, async (req, res, next) => {
   try {
     const assignment = await database.getDB().collection('assignments').findOne({ _id: new ObjectId(req.params.id) });
     if (assignment) {
@@ -62,7 +63,7 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
 });
 
 // PATCH /assignments/:id
-router.patch('/:id', authenticateToken, async (req, res, next) => {
+router.patch('/assignments/:id', authenticateToken, async (req, res, next) => {
   const { role, id: userId } = req.user;
   const assignmentId = req.params.id;
 
@@ -91,7 +92,7 @@ router.patch('/:id', authenticateToken, async (req, res, next) => {
 });
 
 // DELETE /assignments/:id
-router.delete('/:id', authenticateToken, async (req, res, next) => {
+router.delete('/assignments/:id', authenticateToken, async (req, res, next) => {
   const { role, id: userId } = req.user;
   const assignmentId = req.params.id;
 
@@ -112,7 +113,7 @@ router.delete('/:id', authenticateToken, async (req, res, next) => {
 });
 
 // GET /assignments/:id/submissions
-router.get('/:id/submissions', authenticateToken, async (req, res, next) => {
+router.get('/assignments/:id/submissions', authenticateToken, async (req, res, next) => {
   const { role, id: userId } = req.user;
   const assignmentId = req.params.id;
 
@@ -141,7 +142,7 @@ router.get('/:id/submissions', authenticateToken, async (req, res, next) => {
 });
 
 // POST /assignments/:id/submissions
-router.post('/:id/submissions', authenticateToken, async (req, res, next) => {
+router.post('/assignments/:id/submissions', authenticateToken, async (req, res, next) => {
   const { role, id: userId } = req.user;
   const assignmentId = req.params.id;
 
