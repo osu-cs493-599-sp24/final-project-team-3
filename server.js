@@ -1,6 +1,6 @@
 const express = require('express');
-const apiRoutes = require('./src/api');
-const sequelize = require('./src/config/database');
+const sequelize = require('./src/config/database'); // Ensure the path is correct
+const apiRoutes = require('./src/api'); // Ensure the path is correct
 
 const app = express();
 app.use(express.json());
