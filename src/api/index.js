@@ -1,6 +1,6 @@
 const express = require('express');
 const userRoutes = require('./users');
-// const courseRoutes = require('./courses');
+const courseRoutes = require('./courses');
 // const assignmentRoutes = require('./assignments');
 // const submissionRoutes = require('./submissions');
 
