@@ -10,16 +10,23 @@ const router = express.Router();
 
 /*
  * POST /users - Route to create a new user.
- * Only an authenticated user with 'admin' role can create users with 'admin' or 'instructor' roles.
+ * Only an authenticated user with 'admin' role can create users with 'admin' or 'instructor' or 'student' roles.
  */
 router.post('/users', authenticateToken, authorizeRole('admin'), async (req, res, next) => {
   const { username, email, password, role } = req.body;
 
+  // Check if the user has admin role to create users with admin or instructor roles
   if (req.user.role !== 'admin' && (role === 'admin' || role === 'instructor')) {
     return res.status(403).json({ error: 'Forbidden. Only admins can create users with admin or instructor roles.' });
   }
 
   try {
+    // Check if a user with the provided email already exists
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ error: 'A user with this email already exists.' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ username, email, password: hashedPassword, role });
     res.status(201).json({ id: user.id });

@@ -1,6 +1,7 @@
 version: '3.8'
+
 services:
-  db:
+  mysql:
     image: mysql:8.0
     container_name: mysql-container
     environment:
@@ -10,24 +11,31 @@ services:
       MYSQL_PASSWORD: finalP
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
 
-  app:
+  node-app:
     build: .
     container_name: node-app
     environment:
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: finalP
+      DB_HOST: mysql
       DB_USER: finalP
       DB_PASSWORD: finalP
-      ACCESS_TOKEN_SECRET: 4qcc3S1dYE9nEOS8mbk6h3GYs75xqPNPOy4g1PDPeAc=
+      DB_NAME: finalP
+      MYSQL_PORT: 3306
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
 
-volumes:
-  mysql_data:
-
+networks:
+  app-network:
+    driver: bridge
