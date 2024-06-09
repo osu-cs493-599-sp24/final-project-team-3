@@ -4,7 +4,7 @@ const apiRoutes = require('./src/api'); // Ensure the path is correct
 
 const app = express();
 app.use(express.json());
-app.use('/api', apiRoutes);
+app.use('/', apiRoutes);
 
 const PORT = process.env.PORT || 3000;
 

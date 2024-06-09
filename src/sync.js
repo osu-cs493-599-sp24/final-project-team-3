@@ -7,6 +7,7 @@ node src/sync.js
 */
 const sequelize = require('./config/database');
 const User = require('./models/users');
+const submission = require('./models/submissions')
 // Add other models here
 
 const syncDatabase = async () => {
