@@ -21,11 +21,7 @@ const Submission = sequelize.define('Submission', {
   },
   assignmentId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Assignments',
-      key: 'id'
-    }
+    allowNull: false
   },
   studentId: {
     type: DataTypes.INTEGER,
@@ -34,9 +30,12 @@ const Submission = sequelize.define('Submission', {
   timestamp: {
     type: DataTypes.DATE,
     allowNull: false
+  },
+  grade: {
+    type: DataTypes.FLOAT
   }
 }, {
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = Submission;
