@@ -1,14 +1,16 @@
 require('dotenv').config();
+
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const RedisStore = require('rate-limit-redis');
-const redis = require('redis');
-const apiRoutes = require('./src/api');
+const Redis = require('ioredis');
+const { RedisStore } = require('rate-limit-redis');
+
+const api = require('./src/api');
 const sequelize = require('./src/config/database');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 // Request logger
 app.use(morgan('dev'));
@@ -17,7 +19,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Configure Redis client
-const redisClient = redis.createClient({
+const redisClient = new Redis({
   host: 'redis',
   port: 6379
 });
@@ -29,7 +31,7 @@ redisClient.on('error', (err) => {
 // Rate limiting for unauthenticated users
 const unauthenticatedLimiter = rateLimit({
   store: new RedisStore({
-    client: redisClient
+    sendCommand: (...args) => redisClient.call(...args),
   }),
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 10,
@@ -39,7 +41,7 @@ const unauthenticatedLimiter = rateLimit({
 // Rate limiting for authenticated users
 const authenticatedLimiter = rateLimit({
   store: new RedisStore({
-    client: redisClient
+    sendCommand: (...args) => redisClient.call(...args),
   }),
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 30,
@@ -58,7 +60,7 @@ app.use((req, res, next) => {
 });
 
 // API routes
-app.use('/', apiRoutes);
+app.use('/', api);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -75,12 +77,13 @@ app.use('*', (err, req, res, next) => {
   });
 });
 
+// Establish connection to the database and start the server
 const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log('Database connection established successfully.');
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
     });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
