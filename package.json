@@ -12,9 +12,13 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "json2csv": "^5.0.6",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.0",
+    "retry-as-promised": "^7.0.4",
     "sequelize": "^6.37.3"
   }
 }
