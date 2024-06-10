@@ -1,0 +1,33 @@
+[
+    {
+      "username": "admin1",
+      "email": "admin1@example.com",
+      "password": "adminpass",
+      "role": "admin"
+    },
+    {
+      "username": "instructor1",
+      "email": "instructor1@example.com",
+      "password": "instructorpass",
+      "role": "instructor"
+    },
+    {
+      "username": "student1",
+      "email": "student1@example.com",
+      "password": "studentpass",
+      "role": "student"
+    },
+    {
+      "username": "student2",
+      "email": "student2@example.com",
+      "password": "studentpass",
+      "role": "student"
+    },
+    {
+      "username": "student3",
+      "email": "student3@example.com",
+      "password": "studentpass",
+      "role": "student"
+    }
+  ]
+  

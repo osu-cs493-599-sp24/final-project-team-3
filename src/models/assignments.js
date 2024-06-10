@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Course = require('./courses');
 
 const Assignment = sequelize.define('Assignment', {
   id: {
@@ -11,7 +12,7 @@ const Assignment = sequelize.define('Assignment', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Courses', // Name of the table for the Course model
+      model: Course,
       key: 'id'
     }
   },
