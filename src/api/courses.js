@@ -1,8 +1,7 @@
 const { Router } = require('express');
 const { ValidationError } = require('sequelize');
-const { Course, CourseClientFields } = require('../models/courses');
+const { Course, User, Assignment } = require('../models'); // Import models from index file
 const CourseEnrollments = require('../models/enrollments');
-const User = require('../models/users');
 const authenticateToken = require('../middleware/authenticator');
 const authorizeRole = require('../middleware/authorization');
 const { Parser } = require('json2csv');
@@ -14,7 +13,7 @@ const router = Router();
  */
 router.post('/courses', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   try {
-    const course = await Course.create(req.body, CourseClientFields);
+    const course = await Course.create(req.body);
     res.status(201).send({ id: course.id });
   } catch (e) {
     if (e instanceof ValidationError) {
@@ -45,8 +44,8 @@ router.get('/courses', async function (req, res, next) {
   try {
     const { count, rows } = await Course.findAndCountAll({
       where: whereClause,
-      limit: pageSize,
-      offset: (page - 1) * pageSize
+      limit: parseInt(pageSize),
+      offset: (parseInt(page) - 1) * parseInt(pageSize)
     });
     res.status(200).send({
       courses: rows,
@@ -55,7 +54,8 @@ router.get('/courses', async function (req, res, next) {
       totalPages: Math.ceil(count / pageSize)
     });
   } catch (e) {
-    next(e);
+    console.error("Error fetching courses:", e);
+    res.status(500).json({ error: "An error occurred while fetching courses." });
   }
 });
 
@@ -72,7 +72,8 @@ router.get('/courses/:courseId', async function (req, res, next) {
       res.status(404).json({ error: 'Specified Course `id` not found.' });
     }
   } catch (e) {
-    next(e);
+    console.error("Error fetching course:", e);
+    res.status(500).json({ error: "An error occurred while fetching the course." });
   }
 });
 
@@ -90,8 +91,7 @@ router.patch('/courses/:courseId', authenticateToken, async function (req, res, 
       return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
     }
     const result = await Course.update(req.body, {
-      where: { id: courseId },
-      fields: CourseClientFields
+      where: { id: courseId }
     });
     if (result[0] > 0) {
       res.status(200).send(course);
@@ -99,7 +99,8 @@ router.patch('/courses/:courseId', authenticateToken, async function (req, res, 
       res.status(400).json({ error: 'The request body was either not present or did not contain any fields related to Course objects.' });
     }
   } catch (e) {
-    next(e);
+    console.error("Error updating course:", e);
+    res.status(500).json({ error: "An error occurred while updating the course." });
   }
 });
 
@@ -116,33 +117,8 @@ router.delete('/courses/:courseId', authenticateToken, authorizeRole('admin'), a
       res.status(404).json({ error: 'Specified Course `id` not found.' });
     }
   } catch (e) {
-    next(e);
-  }
-});
-
-/*
- * Route to fetch students enrolled in a course.
- */
-router.get('/courses/:courseId/students', authenticateToken, async function (req, res, next) {
-  const courseId = req.params.courseId;
-  try {
-    const course = await Course.findByPk(courseId, {
-      include: {
-        model: User,
-        as: 'students',
-        attributes: ['id', 'username', 'role']
-      }
-    });
-    if (course) {
-      if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
-        return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
-      }
-      res.status(200).send(course.students);
-    } else {
-      res.status(404).json({ error: 'Specified Course `id` not found.' });
-    }
-  } catch (e) {
-    next(e);
+    console.error("Error deleting course:", e);
+    res.status(500).json({ error: "An error occurred while deleting the course." });
   }
 });
 
@@ -174,7 +150,36 @@ router.post('/courses/:courseId/students', authenticateToken, async function (re
 
     res.status(200).send({ message: 'Enrollments updated' });
   } catch (e) {
-    next(e);
+    console.error("Error updating enrollments:", e);
+    res.status(500).json({ error: "An error occurred while updating the enrollments." });
+  }
+});
+
+ /*
+ * Route to fetch the roster of a course in CSV format.
+ */
+router.get('/courses/:courseId/students', authenticateToken, async function (req, res, next) {
+  const courseId = req.params.courseId;
+  try {
+    const course = await Course.findByPk(courseId, {
+      include: {
+        model: User,
+        as: 'enrolledStudents',
+        attributes: ['id', 'username', 'role'],
+        through: { attributes: [] } // exclude the through table attributes
+      }
+    });
+    if (course) {
+      if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
+        return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
+      }
+      res.status(200).send(course.enrolledStudents);
+    } else {
+      res.status(404).json({ error: 'Specified Course `id` not found.' });
+    }
+  } catch (e) {
+    console.error("Error fetching students:", e);
+    res.status(500).json({ error: "An error occurred while fetching the students." });
   }
 });
 
@@ -187,8 +192,9 @@ router.get('/courses/:courseId/roster', authenticateToken, async function (req, 
     const course = await Course.findByPk(courseId, {
       include: {
         model: User,
-        as: 'students',
-        attributes: ['id', 'username']
+        as: 'enrolledStudents',
+        attributes: ['id', 'username'],
+        through: { attributes: [] } // exclude the through table attributes
       }
     });
     if (course) {
@@ -196,7 +202,7 @@ router.get('/courses/:courseId/roster', authenticateToken, async function (req, 
         return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
       }
       const parser = new Parser({ fields: ['id', 'username'] });
-      const csv = parser.parse(course.students);
+      const csv = parser.parse(course.enrolledStudents);
       res.header('Content-Type', 'text/csv');
       res.attachment(`roster_course_${courseId}.csv`);
       res.status(200).send(csv);
@@ -204,14 +210,15 @@ router.get('/courses/:courseId/roster', authenticateToken, async function (req, 
       res.status(404).json({ error: 'Specified Course `id` not found.' });
     }
   } catch (e) {
-    next(e);
+    console.error("Error fetching roster:", e);
+    res.status(500).json({ error: "An error occurred while fetching the roster." });
   }
 });
 
 /*
  * Route to fetch assignments for a course.
  */
-router.get('/courses/:courseId/assignments', async function (req, res, next) {
+router.get('/courses/:courseId/assignments', authenticateToken, async (req, res) => {
   const courseId = req.params.courseId;
   try {
     const course = await Course.findByPk(courseId, {
@@ -221,12 +228,16 @@ router.get('/courses/:courseId/assignments', async function (req, res, next) {
       }
     });
     if (course) {
+      if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
+        return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
+      }
       res.status(200).send(course.assignments);
     } else {
       res.status(404).json({ error: 'Specified Course `id` not found.' });
     }
   } catch (e) {
-    next(e);
+    console.error("Error fetching assignments:", e);
+    res.status(500).json({ error: "An error occurred while fetching assignments." });
   }
 });
 
