@@ -5,13 +5,20 @@ const User = require('./users');
 const Course = require('./courses');
 const Assignment = require('./assignments');
 const CourseEnrollments = require('./enrollments');
+const Submission = require('./submissions');
 
 // Define relationships
-Course.belongsToMany(User, { through: CourseEnrollments, as: 'enrolledStudents' });
-User.belongsToMany(Course, { through: CourseEnrollments, as: 'enrolledCourses' });
+Course.belongsToMany(User, { through: CourseEnrollments, as: 'enrolledStudents', foreignKey: 'courseId' });
+User.belongsToMany(Course, { through: CourseEnrollments, as: 'enrolledCourses', foreignKey: 'userId' });
 
 Course.hasMany(Assignment, { as: 'assignments', foreignKey: 'courseId' });
 Assignment.belongsTo(Course, { foreignKey: 'courseId' });
+
+Assignment.hasMany(Submission, { as: 'submissions', foreignKey: 'assignmentId' });
+Submission.belongsTo(Assignment, { foreignKey: 'assignmentId' });
+
+User.hasMany(Submission, { as: 'submissions', foreignKey: 'studentId' });
+Submission.belongsTo(User, { foreignKey: 'studentId' });
 
 module.exports = {
   sequelize,
@@ -19,5 +26,6 @@ module.exports = {
   User,
   Course,
   Assignment,
-  CourseEnrollments
+  CourseEnrollments,
+  Submission
 };
