@@ -1,64 +1,70 @@
-const { Router } = require('express');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const { Submission, Assignment, Course } = require('../models');
 const authenticateToken = require('../middleware/authenticator');
 
-const router = Router();
+const router = express.Router();
 
-/*
- * PATCH /submissions/:id
- * Update data for a specific Submission.
- */
-router.patch('/submissions/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
+// Route to update a submission
+router.patch('/:id', authenticateToken, async (req, res) => {
+  const submissionId = req.params.id;
+  const { user } = req;
+  const updateData = req.body;
 
   try {
-    const submission = await Submission.findByPk(id);
+    const submission = await Submission.findByPk(submissionId);
     if (!submission) {
-      return res.status(404).json({ error: 'Specified Submission id not found' });
+      return res.status(404).json({ error: 'Submission not found' });
     }
 
     const assignment = await Assignment.findByPk(submission.assignmentId);
     const course = await Course.findByPk(assignment.courseId);
 
-    // Check if the user is admin or the instructor of the course
-    if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
+    if (user.role !== 'admin' && user.id !== course.instructorId) {
       return res.status(403).json({ error: 'Unauthorized' });
     }
 
-    await submission.update(updates);
+    await submission.update(updateData);
+    console.log('Updated submission:', submission.toJSON());
+
     res.status(200).json(submission);
   } catch (error) {
     console.error('Error updating submission:', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'An error occurred while updating the submission' });
   }
 });
 
-/*
- * GET /media/submissions/:filename
- * Download the file for a specific Submission.
- */
-router.get('/media/submissions/:filename', authenticateToken, async (req, res) => {
+// Route to download submission file
+router.get('/media/:filename', authenticateToken, async (req, res) => {
   const { filename } = req.params;
+  const { user } = req;
 
   try {
+    const filePath = path.join(__dirname, '../../uploads', filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Submission file not found' });
+    }
+
     const submission = await Submission.findOne({ where: { filename } });
     if (!submission) {
-      return res.status(404).json({ error: 'Specified Submission file not found' });
+      return res.status(404).json({ error: 'Submission file not found' });
     }
 
     const assignment = await Assignment.findByPk(submission.assignmentId);
     const course = await Course.findByPk(assignment.courseId);
 
-    // Check if the user is admin or the instructor of the course
-    if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
+    if (user.role !== 'admin' && user.id !== course.instructorId) {
       return res.status(403).json({ error: 'Unauthorized' });
     }
 
-    res.download(submission.path, submission.filename);
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    console.log('Submission file content:', fileContent);
+
+    res.status(200).send(fileContent);
   } catch (error) {
-    console.error('Error downloading submission file:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error fetching submission file:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the submission file' });
   }
 });
 
