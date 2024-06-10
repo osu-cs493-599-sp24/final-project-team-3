@@ -36,36 +36,26 @@ router.patch('/:id', authenticateToken, async (req, res) => {
 });
 
 // Route to download submission file
-router.get('/media/:filename', authenticateToken, async (req, res) => {
-  const { filename } = req.params;
-  const { user } = req;
+router.get('/media/submissions/:filename', authenticateToken, async (req, res) => {
+    const { filename } = req.params;
+  
+    try {
+      const submission = await Submission.findOne({ where: { filename } });
+  
 
-  try {
-    const filePath = path.join(__dirname, '../../uploads', filename);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'Submission file not found' });
+  
+      // Check user authorization
+      if (req.user.role !== 'admin' && req.user.id !== submission.studentId) {
+        return res.status(403).json({ error: 'Unauthorized' });
+      }else{
+        res.status(200).json(submission);
+      }
+  
+    } catch (error) {
+      console.error('Error fetching submission file:', error);
+      res.status(500).json({ error: 'An error occurred while fetching the submission file' });
     }
-
-    const submission = await Submission.findOne({ where: { filename } });
-    if (!submission) {
-      return res.status(404).json({ error: 'Submission file not found' });
-    }
-
-    const assignment = await Assignment.findByPk(submission.assignmentId);
-    const course = await Course.findByPk(assignment.courseId);
-
-    if (user.role !== 'admin' && user.id !== course.instructorId) {
-      return res.status(403).json({ error: 'Unauthorized' });
-    }
-
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    console.log('Submission file content:', fileContent);
-
-    res.status(200).send(fileContent);
-  } catch (error) {
-    console.error('Error fetching submission file:', error);
-    res.status(500).json({ error: 'An error occurred while fetching the submission file' });
-  }
-});
+  });
+  
 
 module.exports = router;
