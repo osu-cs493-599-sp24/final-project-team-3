@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  tarpaulin-app:
+    build: .
+    container_name: tarpaulin-app
+    environment:
+      DB_HOST: 34.46.127.16
+      DB_USER: finalP
+      DB_PASSWORD: finalP
+      DB_NAME: finalP
+      DB_PORT: 8080
+    ports:
+      - "8080:8080"
+
   mysql:
     image: mysql:8.0
     container_name: mysql-container
@@ -39,3 +51,4 @@ services:
 networks:
   app-network:
     driver: bridge
+
