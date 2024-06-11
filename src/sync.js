@@ -10,7 +10,7 @@ const assignmentData = require('./data/assignments.json');
 const submissionData = require('./data/submissions.json'); // Ensure this file exists with dummy data
 
 // Define client fields for bulk creation
-const UserClientFields = ['username', 'email', 'password', 'role'];
+const UserClientFields = ['name', 'email', 'password', 'role'];
 const CourseClientFields = ['id', 'title', 'description', 'instructorId'];
 const EnrollmentClientFields = ['courseId', 'userId'];
 const AssignmentClientFields = ['id', 'courseId', 'title', 'description', 'points', 'due'];

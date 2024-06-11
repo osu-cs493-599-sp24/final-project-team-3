@@ -21,7 +21,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\": \"testuser\", \"email\": \"testuser@example.com\", \"password\": \"password\", \"role\": \"admin\"}",
+							"raw": "{\"name\": \"testuser\", \"email\": \"testuser@example.com\", \"password\": \"password\", \"role\": \"admin\"}",
 							"options": {
 								"raw": {
 									"language": "json"

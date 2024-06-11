@@ -12,8 +12,8 @@ const router = express.Router();
  * POST /users - Route to create a new user.
  * Only an authenticated user with 'admin' role can create users with 'admin' or 'instructor' or 'student' roles.
  */
-router.post('/users', authenticateToken, authorizeRole('admin'), async (req, res, next) => {
-  const { username, email, password, role } = req.body;
+router.post('/', authenticateToken, authorizeRole('admin'), async (req, res, next) => {
+  const { name, email, password, role } = req.body;
 
   // Check if the user has admin role to create users with admin or instructor roles
   if (req.user.role !== 'admin' && (role === 'admin' || role === 'instructor')) {
@@ -28,7 +28,7 @@ router.post('/users', authenticateToken, authorizeRole('admin'), async (req, res
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashedPassword, role });
+    const user = await User.create({ name, email, password: hashedPassword, role });
     res.status(201).json({ id: user.id });
   } catch (err) {
     res.status(400).json({ error: 'Invalid User object.' });
@@ -39,7 +39,7 @@ router.post('/users', authenticateToken, authorizeRole('admin'), async (req, res
  * POST /users/login - Route to log in a user.
  * Authenticates a user with their email address and password.
  */
-router.post('/users/login', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ where: { email } });
@@ -54,7 +54,7 @@ router.post('/users/login', async (req, res, next) => {
   }
 });
 
-router.get('/users/:id', authenticateToken, async (req, res, next) => {
+router.get('/:id', authenticateToken, async (req, res, next) => {
   const { id } = req.params;
 
   if (req.user.id !== parseInt(id)) {
@@ -84,7 +84,7 @@ router.get('/users/:id', authenticateToken, async (req, res, next) => {
 
     const userData = {
       id: user.id,
-      username: user.username,
+      name: user.name,
       email: user.email,
       role: user.role
     };
@@ -108,7 +108,7 @@ router.get('/users/:id', authenticateToken, async (req, res, next) => {
  * This route should only be used once to create the initial admin user.
  */
 router.post('/users/initial', async (req, res, next) => {
-  const { username, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
   if (role !== 'admin') {
     return res.status(400).json({ error: 'Initial user must have admin role.' });
   }
@@ -120,7 +120,7 @@ router.post('/users/initial', async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashedPassword, role });
+    const user = await User.create({ name, email, password: hashedPassword, role });
     res.status(201).json({ id: user.id });
   } catch (err) {
     res.status(400).json({ error: 'Invalid User object.' });

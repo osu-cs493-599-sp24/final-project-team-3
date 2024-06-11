@@ -7,7 +7,7 @@ const authenticateToken = require('../middleware/authenticator');
 const router = express.Router();
 
 // Route to update a submission
-router.patch('/:id', authenticateToken, async (req, res) => {
+router.patch('/submissions/:id', authenticateToken, async (req, res) => {
   const submissionId = req.params.id;
   const { user } = req;
   const updateData = req.body;
