@@ -11,7 +11,7 @@ const router = Router();
 /*
  * Route to create a new course.
  */
-router.post('/courses', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
+router.post('/', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   try {
     const course = await Course.create(req.body);
     res.status(201).send({ id: course.id });
@@ -27,7 +27,7 @@ router.post('/courses', authenticateToken, authorizeRole('admin'), async functio
 /*
  * Route to fetch the list of all courses (paginated).
  */
-router.get('/courses', async function (req, res, next) {
+router.get('/', async function (req, res, next) {
   const { page = 1, pageSize = 10, subject, number, term } = req.query;
   const whereClause = {};
 
@@ -62,7 +62,7 @@ router.get('/courses', async function (req, res, next) {
 /*
  * Route to fetch info about a specific course.
  */
-router.get('/courses/:courseId', async function (req, res, next) {
+router.get('/:courseId', async function (req, res, next) {
   const courseId = req.params.courseId;
   try {
     const course = await Course.findByPk(courseId);
@@ -80,7 +80,7 @@ router.get('/courses/:courseId', async function (req, res, next) {
 /*
  * Route to update a course.
  */
-router.patch('/courses/:courseId', authenticateToken, async function (req, res, next) {
+router.patch('/:courseId', authenticateToken, async function (req, res, next) {
   const courseId = req.params.courseId;
   try {
     const course = await Course.findByPk(courseId);
@@ -107,7 +107,7 @@ router.patch('/courses/:courseId', authenticateToken, async function (req, res, 
 /*
  * Route to delete a course.
  */
-router.delete('/courses/:courseId', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
+router.delete('/:courseId', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   const courseId = req.params.courseId;
   try {
     const result = await Course.destroy({ where: { id: courseId }});
@@ -125,7 +125,7 @@ router.delete('/courses/:courseId', authenticateToken, authorizeRole('admin'), a
 /*
  * Route to update enrollment for a course.
  */
-router.post('/courses/:courseId/students', authenticateToken, async function (req, res, next) {
+router.post('/:courseId/students', authenticateToken, async function (req, res, next) {
   const courseId = req.params.courseId;
   const { add, remove } = req.body;
   try {
@@ -158,14 +158,14 @@ router.post('/courses/:courseId/students', authenticateToken, async function (re
  /*
  * Route to fetch the roster of a course in CSV format.
  */
-router.get('/courses/:courseId/students', authenticateToken, async function (req, res, next) {
+router.get('/:courseId/students', authenticateToken, async function (req, res, next) {
   const courseId = req.params.courseId;
   try {
     const course = await Course.findByPk(courseId, {
       include: {
         model: User,
         as: 'enrolledStudents',
-        attributes: ['id', 'username', 'role'],
+        attributes: ['id', 'name', 'role'],
         through: { attributes: [] } // exclude the through table attributes
       }
     });
@@ -186,14 +186,14 @@ router.get('/courses/:courseId/students', authenticateToken, async function (req
 /*
  * Route to fetch the roster of a course in CSV format.
  */
-router.get('/courses/:courseId/roster', authenticateToken, async function (req, res, next) {
+router.get('/:courseId/roster', authenticateToken, async function (req, res, next) {
   const courseId = req.params.courseId;
   try {
     const course = await Course.findByPk(courseId, {
       include: {
         model: User,
         as: 'enrolledStudents',
-        attributes: ['id', 'username'],
+        attributes: ['id', 'name'],
         through: { attributes: [] } // exclude the through table attributes
       }
     });
@@ -201,7 +201,7 @@ router.get('/courses/:courseId/roster', authenticateToken, async function (req, 
       if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
         return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
       }
-      const parser = new Parser({ fields: ['id', 'username'] });
+      const parser = new Parser({ fields: ['id', 'name'] });
       const csv = parser.parse(course.enrolledStudents);
       res.header('Content-Type', 'text/csv');
       res.attachment(`roster_course_${courseId}.csv`);
@@ -218,7 +218,7 @@ router.get('/courses/:courseId/roster', authenticateToken, async function (req, 
 /*
  * Route to fetch assignments for a course.
  */
-router.get('/courses/:courseId/assignments', authenticateToken, async (req, res) => {
+router.get('/:courseId/assignments', authenticateToken, async (req, res) => {
   const courseId = req.params.courseId;
   try {
     const course = await Course.findByPk(courseId, {

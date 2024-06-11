@@ -27,7 +27,7 @@ const upload = multer({ storage });
 /*
  * Route to create a new assignment.
  */
-router.post('/assignments', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
+router.post('/', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   try {
     console.log('Request Body:', req.body); // Log the request body for debugging
     const assignment = await Assignment.create(req.body);
@@ -46,7 +46,7 @@ router.post('/assignments', authenticateToken, authorizeRole('admin'), async fun
 /*
  * Route to fetch info about a specific assignment.
  */
-router.get('/assignments/:assignmentId', authenticateToken, async function (req, res, next) {
+router.get('/:assignmentId', authenticateToken, async function (req, res, next) {
   const assignmentId = req.params.assignmentId;
   try {
     const assignment = await Assignment.findByPk(assignmentId);
@@ -63,7 +63,7 @@ router.get('/assignments/:assignmentId', authenticateToken, async function (req,
 /*
  * Route to update an assignment.
  */
-router.patch('/assignments/:assignmentId', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
+router.patch('/:assignmentId', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   const assignmentId = req.params.assignmentId;
   try {
     const assignment = await Assignment.findByPk(assignmentId);
@@ -84,7 +84,7 @@ router.patch('/assignments/:assignmentId', authenticateToken, authorizeRole('adm
 /*
  * Route to delete an assignment.
  */
-router.delete('/assignments/:assignmentId', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
+router.delete('/:assignmentId', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
   const assignmentId = req.params.assignmentId;
   try {
     const result = await Assignment.destroy({ where: { id: assignmentId } });
@@ -101,7 +101,7 @@ router.delete('/assignments/:assignmentId', authenticateToken, authorizeRole('ad
 /*
  * Route to fetch the list of all submissions for an assignment.
  */
-router.get('/assignments/:id/submissions', authenticateToken, async function (req, res, next) {
+router.get('/:id/submissions', authenticateToken, async function (req, res, next) {
   const assignmentId = req.params.id;
   const page = parseInt(req.query.page) || 1;
   const studentId = req.query.studentId;
@@ -135,7 +135,7 @@ router.get('/assignments/:id/submissions', authenticateToken, async function (re
 /*
  * Route to create a new submission for an assignment.
  */
-router.post('/assignments/:id/submissions', authenticateToken, authorizeRole('student'), upload.single('file'), async function (req, res, next) {
+router.post('/:id/submissions', authenticateToken, authorizeRole('student'), upload.single('file'), async function (req, res, next) {
   const assignmentId = req.params.id;
 
   // Only students enrolled in the course can submit

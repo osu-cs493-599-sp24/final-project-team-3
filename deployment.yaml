@@ -1,30 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: your-app-deployment
+  name: tarpaulin-app-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: your-app
+      app: tarpaulin-app
   template:
     metadata:
       labels:
-        app: your-app
+        app: tarpaulin-app
     spec:
       containers:
-      - name: your-app
-        image: gcr.io/YOUR_PROJECT_ID/your-app-name:latest
+      - name: tarpaulin-app
+        image: gcr.io/team-3-425920/tarpaulin-api:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
         env:
         - name: DB_HOST
-          value: "your-database-host"
+          value: "34.46.127.16"
         - name: DB_PORT
           value: "3306"
         - name: DB_NAME
-          value: "your-database-name"
+          value: "finalP"
         - name: DB_USER
-          value: "your-database-user"
+          value: "finalP"
         - name: DB_PASSWORD
-          value: "your-database-password"
+          value: "finalP"
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
