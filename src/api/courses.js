@@ -8,20 +8,26 @@ const { Parser } = require('json2csv');
 
 const router = Router();
 
-/*
- * Route to create a new course.
- */
+/* Route to create a new course.
+* Only an authenticated User with 'admin' role can create a new Course.
+*/
 router.post('/', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
-  try {
-    const course = await Course.create(req.body);
-    res.status(201).send({ id: course.id });
-  } catch (e) {
-    if (e instanceof ValidationError) {
-      res.status(400).json({ error: 'The request body was either not present or did not contain a valid Course object.' });
-    } else {
-      next(e);
-    }
-  }
+ try {
+   const course = await Course.create(req.body);
+   res.status(201).send({ id: course.id });
+ } catch (e) {
+   if (e instanceof ValidationError) {
+     const errors = e.errors.map(err => err.message);
+     res.status(400).json({ error: 'The request body did not contain a valid Course object.', details: errors });
+   } else if (e instanceof UniqueConstraintError) {
+     res.status(400).json({ error: 'A course with the given details already exists.' });
+   } else if (e instanceof ForeignKeyConstraintError) {
+     res.status(400).json({ error: 'The provided instructor ID does not exist.' });
+   } else {
+     console.error("Unexpected error:", e);
+     res.status(500).json({ error: 'An unexpected error occurred while creating the course.' });
+   }
+ }
 });
 
 /*
