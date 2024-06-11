@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.use('/users', usersRouter);
 router.use('/courses', coursesRouter);
-router.use('/submissions', submissionsRouter);
+router.use('/', submissionsRouter);
 router.use('/assignments', assignmentRoutes);
 module.exports = router;
 
