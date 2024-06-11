@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/users');
+const { User, Course, CourseEnrollments } = require('../models');
 const authenticateToken = require('../middleware/authenticator');
 const authorizeRole = require('../middleware/authorization');
 require('dotenv').config();
@@ -54,26 +54,54 @@ router.post('/users/login', async (req, res, next) => {
   }
 });
 
-/*
- * GET /users/:id - Route to fetch data about a specific user.
- * Only the authenticated user whose ID matches the requested user ID can fetch this information.
- */
 router.get('/users/:id', authenticateToken, async (req, res, next) => {
   const { id } = req.params;
+
   if (req.user.id !== parseInt(id)) {
     return res.status(403).json({ error: 'Forbidden. You can only access your own user data.' });
   }
 
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      include: [
+        {
+          model: Course,
+          as: 'enrolledCourses',
+          attributes: ['id'],
+          through: { attributes: [] }
+        },
+        {
+          model: Course,
+          as: 'taughtCourses',
+          attributes: ['id']
+        }
+      ]
+    });
+
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
-    res.json(user);
+
+    const userData = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    };
+
+    if (user.role === 'student') {
+      userData.enrolledCourses = user.enrolledCourses.map(course => course.id);
+    } else if (user.role === 'instructor') {
+      userData.taughtCourses = user.taughtCourses.map(course => course.id);
+    }
+
+    res.json(userData);
   } catch (err) {
+    console.error("Error fetching user data:", err);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
+
 
 /*
  * POST /users/initial - Route to create the initial admin user.
