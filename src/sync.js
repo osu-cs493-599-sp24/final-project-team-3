@@ -11,7 +11,7 @@ const submissionData = require('./data/submissions.json'); // Ensure this file e
 
 // Define client fields for bulk creation
 const UserClientFields = ['name', 'email', 'password', 'role'];
-const CourseClientFields = ['id', 'title', 'description', 'instructorId'];
+const CourseClientFields = ['id', 'subject', 'number', 'title', 'term', 'instructorId'];
 const EnrollmentClientFields = ['courseId', 'userId'];
 const AssignmentClientFields = ['id', 'courseId', 'title', 'description', 'points', 'due'];
 const SubmissionClientFields = ['id', 'contentType', 'filename', 'path', 'assignmentId', 'studentId', 'timestamp', 'grade'];
