@@ -1,7 +1,6 @@
 # Tarpaulin API
 
 Tarpaulin is a course management tool that involves developing a complete RESTful API for Tarpaulin, allowing users (instructors and students) to manage courses, assignments, and submissions.
-
 ## Table of Contents
 
 - [Project Overview](#project-overview)
@@ -47,15 +46,14 @@ The Tarpaulin API supports various operations for managing courses, assignments,
 
 - Node.js (>= 14.x)
 - Docker
-- AWS account for S3
 - Google Cloud account
 
 ### Installation
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/tarpaulin-api.git
-   cd tarpaulin-api
+   git clone https://github.com/osu-cs493-599-sp24/final-project-team-3.git
+   cd final-project-team-3
    ```
 
 2. Install dependencies:
@@ -66,38 +64,41 @@ The Tarpaulin API supports various operations for managing courses, assignments,
 3. Set up environment variables:
    Create a `.env` file in the root directory with the following content:
    ```env
-   NODE_ENV=development
-   DB_HOST=db
-   DB_USER=root
-   DB_PASSWORD=example
-   DB_NAME=tarpaulin
-   JWT_SECRET=your_jwt_secret
-   AWS_ACCESS_KEY_ID=your_aws_access_key_id
-   AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
-   AWS_S3_BUCKET_NAME=your_s3_bucket_name
+   DB_HOST=localhost
+   DB_USER=finalP
+   DB_PASSWORD=finalP
+   DB_NAME=finalP
+   ACCESS_TOKEN_SECRET=your-access-token
+   DB_PORT=3306
    ```
-### To generate a secure JWT secret key, you can use various methods. Here are a few recommended ways to generate a strong secret key:
 
-   Using OpenSSL
-   If you have OpenSSL installed on your machine, you can generate a strong random key using the following command:
+### Generating a Secure JWT Secret Key
 
-   ```sh
-   openssl rand -base64 32
-   ```
-   This will generate a 32-byte random key encoded in base64. For example:
-   
-   `wA7pZGtJwMEHP9ZlQf3+Gd0T/jY6h1lJfGi1U7DtYY0=`
-   
+To generate a secure JWT secret key, you can use various methods. Here is one recommended way using OpenSSL:
+
+Using OpenSSL:
+```sh
+openssl rand -base64 32
+```
+This will generate a 32-byte random key encoded in base64, for example:
+`wA7pZGtJwMEHP9ZlQf3+Gd0T/jY6h1lJfGi1U7DtYY0=`
+
 ## Running the Application
 
 ### Using Docker
 
-1. Start the services using Docker Compose:
+Steps to run the complete setup:
+1. Build and start the containers:
    ```sh
-   docker-compose up
+   docker-compose up -d --build
    ```
 
-2. The API should now be running at `http://localhost:3000`.
+2. Run the sync script inside the Node.js container to initialize the database:
+   ```sh
+   docker-compose exec app node src/sync.js
+   ```
+
+The API should now be running at `http://localhost:3000`.
 
 ### Without Docker
 
@@ -109,10 +110,10 @@ The Tarpaulin API supports various operations for managing courses, assignments,
 
 ## API Endpoints
 
-The API endpoints are defined in the OpenAPI specification (openapi.yaml) and can be viewed in the Swagger editor( https://editor.swagger.io). Below are some key endpoints:
+The API endpoints are defined in the OpenAPI specification (openapi.yaml) and can be viewed in the Swagger editor (https://editor.swagger.io). Below are some key endpoints:
 
 - **User Authentication**
-  - `POST /users`
+  - `POST /users/initial`
   - `POST /users/login`
   - `GET /users/{id}`
 
@@ -126,7 +127,7 @@ The API endpoints are defined in the OpenAPI specification (openapi.yaml) and ca
   - `GET /courses/{id}/students`
   - `POST /courses/{id}/students`
   - `GET /courses/{id}/assignments`
-    
+
 - **Assignments**
   - `GET /assignments/{id}`
   - `POST /assignments`
@@ -134,7 +135,7 @@ The API endpoints are defined in the OpenAPI specification (openapi.yaml) and ca
   - `DELETE /assignments/{id}`
   - `GET /assignments/{id}/submissions`
   - `POST /assignments/{id}/submissions`
-  - 
+
 - **Submissions**
   - `PATCH /submissions/{id}`
   - `GET /media/submissions/{filename}`
@@ -146,11 +147,11 @@ The API endpoints are defined in the OpenAPI specification (openapi.yaml) and ca
 1. **Deploy using Google Cloud Run:**
    - Build and push the Docker image to Google Container Registry:
      ```sh
-     gcloud builds submit --tag gcr.io/your-project-id/tarpaulin-api
+     docker build -t gcr.io/team-3-425920/tarpaulin-api:latest .
      ```
    - Deploy the image to Cloud Run:
      ```sh
-     gcloud run deploy tarpaulin-api --image gcr.io/your-project-id/tarpaulin-api --platform managed --region us-central1
+     gcloud run deploy tarpaulin-api --image gcr.io/team-3-425920/tarpaulin-api --platform managed --region us-central1
      ```
 
 2. **Deploy using Google Kubernetes Engine (GKE):**
