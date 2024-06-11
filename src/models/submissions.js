@@ -2,40 +2,40 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Submission = sequelize.define('Submission', {
-  submissionId: {
+  id: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
     autoIncrement: true,
+    primaryKey: true
+  },
+  contentType: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  filename: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  path: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
   assignmentId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   studentId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   timestamp: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  fileUrl: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   grade: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
+    type: DataTypes.FLOAT
+  }
 }, {
-  tableName: 'Submissions',
+  timestamps: true
 });
-
-const User = require('./users');
-console.log('User Model:', User);
-console.log('User Model Name:', User.name);
-console.log('User Prototype:', User.prototype);
-
-Submission.belongsTo(User, { foreignKey: 'studentId' });
 
 module.exports = Submission;

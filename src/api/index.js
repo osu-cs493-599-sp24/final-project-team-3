@@ -1,14 +1,21 @@
+
+
+// src/api/index.js
 const express = require('express');
-const userRoutes = require('./users');
-const courseRoutes = require('./courses');
-const assignmentRoutes = require('./assignments.js');
-const submissionRoutes = require('./submissions');
+
+const assignmentRoutes = require('./assignments');
+const usersRouter = require('./users');
+const coursesRouter = require('./courses');
+const submissionsRouter = require('./submissions');
 
 const router = express.Router();
 
-router.use(userRoutes);
-router.use(courseRoutes);
-router.use(assignmentRoutes);
-router.use(submissionRoutes);
-
+router.use('/', usersRouter);
+router.use('/', coursesRouter);
+router.use('/submissions', submissionsRouter);
+router.use('/', assignmentRoutes);
 module.exports = router;
+
+
+
+

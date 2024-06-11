@@ -1,10 +1,12 @@
-FROM node:14
+# Use the official Node.js image.
+FROM node:16
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+# Install production dependencies.
+RUN npm install --production
 
 COPY . .
 
