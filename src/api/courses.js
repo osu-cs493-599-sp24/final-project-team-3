@@ -47,17 +47,20 @@ router.get('/', async function (req, res, next) {
       limit: parseInt(pageSize),
       offset: (parseInt(page) - 1) * parseInt(pageSize)
     });
+
     res.status(200).send({
       courses: rows,
       page: parseInt(page),
       pageSize: parseInt(pageSize),
-      totalPages: Math.ceil(count / pageSize)
+      totalPages: Math.ceil(count / pageSize),
+      totalCourses: count
     });
   } catch (e) {
     console.error("Error fetching courses:", e);
     res.status(500).json({ error: "An error occurred while fetching courses." });
   }
 });
+
 
 /*
  * Route to fetch info about a specific course.
