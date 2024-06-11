@@ -14,11 +14,13 @@ User.belongsToMany(Course, { through: CourseEnrollments, as: 'enrolledCourses', 
 Course.hasMany(Assignment, { as: 'assignments', foreignKey: 'courseId' });
 Assignment.belongsTo(Course, { foreignKey: 'courseId' });
 
+Course.belongsTo(User, { as: 'instructor', foreignKey: 'instructorId' });
+User.hasMany(Course, { as: 'taughtCourses', foreignKey: 'instructorId' });
+
 Assignment.hasMany(Submission, { as: 'submissions', foreignKey: 'assignmentId' });
 Submission.belongsTo(Assignment, { foreignKey: 'assignmentId' });
 
-User.hasMany(Submission, { as: 'submissions', foreignKey: 'studentId' });
-Submission.belongsTo(User, { foreignKey: 'studentId' });
+Submission.belongsTo(User, { as: 'student', foreignKey: 'studentId' });
 
 module.exports = {
   sequelize,

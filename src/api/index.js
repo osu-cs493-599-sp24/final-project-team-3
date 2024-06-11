@@ -10,10 +10,10 @@ const submissionsRouter = require('./submissions');
 
 const router = express.Router();
 
-router.use('/users', usersRouter);
-router.use('/courses', coursesRouter);
-router.use('/submissions', submissionsRouter);
-router.use('/assignments', assignmentRoutes);
+router.use('/', usersRouter);
+router.use('/', coursesRouter);
+router.use('/', submissionsRouter);
+router.use('/', assignmentRoutes);
 module.exports = router;
 
 
