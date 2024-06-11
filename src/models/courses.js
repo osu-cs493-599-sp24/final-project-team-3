@@ -8,11 +8,19 @@ const Course = sequelize.define('Course', {
     autoIncrement: true,
     primaryKey: true
   },
+  subject: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  number: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   title: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  description: {
+  term: {
     type: DataTypes.STRING,
     allowNull: false
   },
