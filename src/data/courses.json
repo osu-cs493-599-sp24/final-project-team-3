@@ -28,6 +28,66 @@
       "title": "Course 5",
       "description": "Description for course 5",
       "instructorId": 2
+    },
+    {
+      "id": 6,
+      "title": "Course 1",
+      "description": "Description for course 1",
+      "instructorId": 2
+    },
+    {
+      "id": 7,
+      "title": "Course 2",
+      "description": "Description for course 2",
+      "instructorId": 2
+    },
+    {
+      "id": 8,
+      "title": "Course 3",
+      "description": "Description for course 3",
+      "instructorId": 2
+    },
+    {
+      "id": 9,
+      "title": "Course 4",
+      "description": "Description for course 4",
+      "instructorId": 2
+    },
+    {
+      "id": 10,
+      "title": "Course 5",
+      "description": "Description for course 5",
+      "instructorId": 2
+    },
+    {
+      "id": 11,
+      "title": "Course 1",
+      "description": "Description for course 1",
+      "instructorId": 2
+    },
+    {
+      "id": 12,
+      "title": "Course 2",
+      "description": "Description for course 2",
+      "instructorId": 2
+    },
+    {
+      "id": 13,
+      "title": "Course 3",
+      "description": "Description for course 3",
+      "instructorId": 2
+    },
+    {
+      "id": 14,
+      "title": "Course 4",
+      "description": "Description for course 4",
+      "instructorId": 2
+    },
+    {
+      "id": 15,
+      "title": "Course 5",
+      "description": "Description for course 5",
+      "instructorId": 2
     }
   ]
   

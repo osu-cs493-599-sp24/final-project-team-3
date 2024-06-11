@@ -28,6 +28,24 @@
       "email": "student3@example.com",
       "password": "studentpass",
       "role": "student"
+    },
+    {
+      "name": "instructor2",
+      "email": "instructor2@example.com",
+      "password": "instructorpass",
+      "role": "instructor"
+    },
+    {
+      "name": "instructor3",
+      "email": "instructor3@example.com",
+      "password": "instructorpass",
+      "role": "instructor"
+    },
+    {
+      "name": "instructor4",
+      "email": "instructor4@example.com",
+      "password": "instructorpass",
+      "role": "instructor"
     }
   ]
   
