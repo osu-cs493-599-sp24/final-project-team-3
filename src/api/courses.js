@@ -6,29 +6,26 @@ const authenticateToken = require('../middleware/authenticator');
 const authorizeRole = require('../middleware/authorization');
 const { Parser } = require('json2csv');
 
+
 const router = Router();
 
-/* Route to create a new course.
-* Only an authenticated User with 'admin' role can create a new Course.
-*/
+
+/*
+ * Route to create a new course.
+ */
 router.post('/', authenticateToken, authorizeRole('admin'), async function (req, res, next) {
- try {
-   const course = await Course.create(req.body);
-   res.status(201).send({ id: course.id });
- } catch (e) {
-   if (e instanceof ValidationError) {
-     const errors = e.errors.map(err => err.message);
-     res.status(400).json({ error: 'The request body did not contain a valid Course object.', details: errors });
-   } else if (e instanceof UniqueConstraintError) {
-     res.status(400).json({ error: 'A course with the given details already exists.' });
-   } else if (e instanceof ForeignKeyConstraintError) {
-     res.status(400).json({ error: 'The provided instructor ID does not exist.' });
-   } else {
-     console.error("Unexpected error:", e);
-     res.status(500).json({ error: 'An unexpected error occurred while creating the course.' });
-   }
- }
+  try {
+    const course = await Course.create(req.body);
+    res.status(201).send({ id: course.id });
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      res.status(400).json({ error: 'The request body was either not present or did not contain a valid Course object.' });
+    } else {
+      next(e);
+    }
+  }
 });
+
 
 /*
  * Route to fetch the list of all courses (paginated).
@@ -36,6 +33,7 @@ router.post('/', authenticateToken, authorizeRole('admin'), async function (req,
 router.get('/', async function (req, res, next) {
   const { page = 1, pageSize = 10, subject, number, term } = req.query;
   const whereClause = {};
+
 
   if (subject) {
     whereClause.subject = subject;
@@ -47,12 +45,14 @@ router.get('/', async function (req, res, next) {
     whereClause.term = term;
   }
 
+
   try {
     const { count, rows } = await Course.findAndCountAll({
       where: whereClause,
       limit: parseInt(pageSize),
       offset: (parseInt(page) - 1) * parseInt(pageSize)
     });
+
 
     res.status(200).send({
       courses: rows,
@@ -66,6 +66,8 @@ router.get('/', async function (req, res, next) {
     res.status(500).json({ error: "An error occurred while fetching courses." });
   }
 });
+
+
 
 
 /*
@@ -86,6 +88,7 @@ router.get('/:courseId', async function (req, res, next) {
   }
 });
 
+
 /*
  * Route to update a course.
  */
@@ -103,7 +106,8 @@ router.patch('/:courseId', authenticateToken, async function (req, res, next) {
       where: { id: courseId }
     });
     if (result[0] > 0) {
-      res.status(200).send(course);
+      const updatedCourse = await Course.findByPk(courseId);
+      res.status(200).send(updatedCourse);
     } else {
       res.status(400).json({ error: 'The request body was either not present or did not contain any fields related to Course objects.' });
     }
@@ -112,6 +116,9 @@ router.patch('/:courseId', authenticateToken, async function (req, res, next) {
     res.status(500).json({ error: "An error occurred while updating the course." });
   }
 });
+
+
+
 
 /*
  * Route to delete a course.
@@ -131,6 +138,7 @@ router.delete('/:courseId', authenticateToken, authorizeRole('admin'), async fun
   }
 });
 
+
 /*
  * Route to update enrollment for a course.
  */
@@ -149,6 +157,7 @@ router.post('/:courseId/students', authenticateToken, async function (req, res, 
       return res.status(400).json({ error: 'The request body was either not present or did not contain the fields described above.' });
     }
 
+
     if (add && add.length > 0) {
       const enrollments = add.map((studentId) => ({ courseId, userId: studentId }));
       await CourseEnrollments.bulkCreate(enrollments);
@@ -157,14 +166,16 @@ router.post('/:courseId/students', authenticateToken, async function (req, res, 
       await CourseEnrollments.destroy({ where: { courseId, userId: remove } });
     }
 
+
     res.status(200).send({ message: 'Enrollments updated' });
   } catch (e) {
     console.error("Error updating enrollments:", e);
-    res.status(500).json({ error: "An error occurred while updating the enrollments." });
+    res.status(400).json({ error: "An error occurred while updating the enrollments." });
   }
 });
 
- /*
+
+/*
  * Route to fetch the roster of a course in CSV format.
  */
 router.get('/:courseId/students', authenticateToken, async function (req, res, next) {
@@ -174,7 +185,7 @@ router.get('/:courseId/students', authenticateToken, async function (req, res, n
       include: {
         model: User,
         as: 'enrolledStudents',
-        attributes: ['id', 'name', 'role'],
+        attributes: ['id', 'name', 'email', 'role'],
         through: { attributes: [] } // exclude the through table attributes
       }
     });
@@ -182,7 +193,7 @@ router.get('/:courseId/students', authenticateToken, async function (req, res, n
       if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
         return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
       }
-      res.status(200).send(course.enrolledStudents);
+      res.status(200).send({ students: course.enrolledStudents });
     } else {
       res.status(404).json({ error: 'Specified Course `id` not found.' });
     }
@@ -191,6 +202,9 @@ router.get('/:courseId/students', authenticateToken, async function (req, res, n
     res.status(500).json({ error: "An error occurred while fetching the students." });
   }
 });
+
+
+
 
 /*
  * Route to fetch the roster of a course in CSV format.
@@ -202,7 +216,7 @@ router.get('/:courseId/roster', authenticateToken, async function (req, res, nex
       include: {
         model: User,
         as: 'enrolledStudents',
-        attributes: ['id', 'name'],
+        attributes: ['id', 'name', 'email'],
         through: { attributes: [] } // exclude the through table attributes
       }
     });
@@ -210,7 +224,7 @@ router.get('/:courseId/roster', authenticateToken, async function (req, res, nex
       if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
         return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
       }
-      const parser = new Parser({ fields: ['id', 'name'] });
+      const parser = new Parser({ fields: ['id', 'name', 'email'] });
       const csv = parser.parse(course.enrolledStudents);
       res.header('Content-Type', 'text/csv');
       res.attachment(`roster_course_${courseId}.csv`);
@@ -224,6 +238,9 @@ router.get('/:courseId/roster', authenticateToken, async function (req, res, nex
   }
 });
 
+
+
+
 /*
  * Route to fetch assignments for a course.
  */
@@ -233,14 +250,15 @@ router.get('/:courseId/assignments', authenticateToken, async (req, res) => {
     const course = await Course.findByPk(courseId, {
       include: {
         model: Assignment,
-        as: 'assignments'
+        as: 'assignments',
+        attributes: ['courseId', 'title', 'description', 'points', 'due']
       }
     });
     if (course) {
       if (req.user.role !== 'admin' && req.user.id !== course.instructorId) {
         return res.status(403).json({ error: 'The request was not made by an authenticated User satisfying the authorization criteria described above.' });
       }
-      res.status(200).send(course.assignments);
+      res.status(200).send({ assignments: course.assignments });
     } else {
       res.status(404).json({ error: 'Specified Course `id` not found.' });
     }
@@ -249,5 +267,8 @@ router.get('/:courseId/assignments', authenticateToken, async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching assignments." });
   }
 });
+
+
+
 
 module.exports = router;
